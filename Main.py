@@ -43,4 +43,5 @@ def getUserData(email, password):
     return {'gradebooks': gradebooks, 'assignments': assignments}
 
 def toJSON(python_hierachy):
-    return json.dumps(python_hierachy, sort_keys=True, indent=4, separators=(',', ': '))
+    return json.dumps(python_hierachy, sort_keys=True, indent=4,
+                      separators=(',', ': '), ensure_ascii=False)
