@@ -6,7 +6,7 @@ New incarnation of an Aeries API (to go along with the districts new version of 
 - check for edge case bugs
 - decide on how to deal with blank fields (None/null type, '' string, 'blank' string etc.)
 
-## Wishlist
+## Ideally
 - generalized parsing
 	- give the parser a model (like a regex statement) with defined variable names
         - Things already exist for this (e.g. Scrapely)
