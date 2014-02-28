@@ -14,7 +14,8 @@ def getAssignments(session):
     month_id = {'id': re.compile('ctl(\d\d)_MainContent_ctl(\d\d)_lblDate')}
     month_str = soup.find('span', month_id).get_text()
     month = dateutil.parser.parse(month_str)
-    day_id = {'id': re.compile('ctl(\d\d)_MainContent_ctl(\d\d)_tdWk(\d)Dy(\d)')}
+    day_id = {'id': re.compile(("ctl(\d\d)_MainContent_ctl(\d\d)"
+                                "_tdWk(\d)Dy(\d)"))}
     day_tags = soup.find_all('td', day_id)
     assignments = []
     in_month = False
@@ -28,14 +29,16 @@ def getAssignments(session):
             continue
         date = month.replace(day=int(day_of_month)).isoformat()
         day = getDay(day_tag, date)
-        #intentional avoidance of .append(); += combines lists at the same level
+        #intentional avoidance of .append();
+        #   += combines lists at the same level
         assignments += day
     return assignments
 
 def getMonthPage(session):
     page = session.getPage(ADDRESS)
     soup = BeautifulSoup(page)
-    select_id = {'id': re.compile('ctl(\d\d)_MainContent_ctl(\d\d)_CalendarView')}
+    select_id = {'id': re.compile(("ctl(\d\d)_MainContent"
+                                   "_ctl(\d\d)_CalendarView"))}
     select_tag = soup.find('select', select_id)
     session.select(select_tag.get('id'), 'Month')
     return session.executeJS(select_tag.get('onchange'))
@@ -50,7 +53,8 @@ def getDay(tag, date):
     i = 0
     for assignment_row in assignment_rows:
         assignment = getAssignment(assignment_row, date)
-        #Deals with non-expanding assignments or ones that do not follow Pd # ... format
+        #Deals with non-expanding assignments or
+        #   ones that do not follow Pd # ... format
         if assignment['short description'] == None:
             long_description = assignment['long description']
             short_assignment_row = assignment_row.previous_sibling
@@ -62,11 +66,16 @@ def getDay(tag, date):
 
 def getAssignment(tag, date):
     assignment =    {
-                        'date':                 date,
-                        'period':               getAssignmentPart('period', tag),
-                        'action':               getAssignmentPart('action', tag),
-                        'short description':    getAssignmentPart('short description', tag),
-                        'long description':     getAssignmentPart('long description', tag)
+                        'date':
+                                date,
+                        'period':
+                                getAssignmentPart('period', tag),
+                        'action':
+                                getAssignmentPart('action', tag),
+                        'short description':
+                                getAssignmentPart('short description', tag),
+                        'long description':
+                                getAssignmentPart('long description', tag)
     }
     return assignment
 

@@ -20,3 +20,11 @@ Notes
 *.bak
 *.swp
 *~
+
+#possible reverse templating setup
+RT
+Templates
+
+#Different versions of files
+*.old
+*.new

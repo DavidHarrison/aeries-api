@@ -9,4 +9,5 @@ New incarnation of an Aeries API (to go along with the districts new version of 
 ## Wishlist
 - generalized parsing
 	- give the parser a model (like a regex statement) with defined variable names
+        - Things already exist for this (e.g. Scrapely)
 	- parser outputs dictionary with variable names from model

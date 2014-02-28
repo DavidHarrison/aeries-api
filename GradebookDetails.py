@@ -42,34 +42,52 @@ def getEntries(soup):
 def getEntry(row):
     tds = row.find_all('td', {'class': 'Data'})
     entry = {
-                'assignment number':        clean(tds[0].get_text()),
+                'assignment number':
+                    clean(tds[0].get_text()),
                 #description/name
-                'description':              clean(tds[1].get_text('|').split('|')[0]),
-                'date assigned':            getDate(getExpand('date assigned', tds[1])),
+                'description':
+                    clean(tds[1].get_text('|').split('|')[0]),
+                'date assigned':
+                    getDate(getExpand('date assigned', tds[1])),
                 #cannot figure out what format would look like; omitting
-                #'due time':                getExpand('due time', tds[1]),
-                'long description':         getExpand('long description', tds[1]),
+                #'due time':
+                #   getExpand('due time', tds[1]),
+                'long description':
+                    getExpand('long description', tds[1]),
                 #type of assignment (Formative/Summative)
-                'type':                     tds[2].get_text(),
+                'type':
+                    tds[2].get_text(),
                 #weighting category
-                'category':                 tds[3].get_text(),
+                'category':
+                    tds[3].get_text(),
                 #score recieved on assignment (my points)
-                'recieved points':           getScore(tds[4])['numerator'],
+                'recieved points':
+                    getScore(tds[4])['numerator'],
                 #max score on assignment (out of points)
-                'max points':                getScore(tds[4])['denominator'],
+                'max points':
+                    getScore(tds[4])['denominator'],
                 #appears to be essentially the same as score; omitting
-                #'recieved number correct': getScore(tds[5])['numerator'],
-                #'max number correct':      getScore(tds[5])['denominator'],
-                #percentage on assignment (could also be calculated directly from score)
-                'percent':                  tds[6].get_text().rstrip('%'),
+                #'recieved number correct':
+                #   getScore(tds[5])['numerator'],
+                #'max number correct':
+                #   getScore(tds[5])['denominator'],
+                #percentage on assignment
+                #   (could also be calculated directly from score)
+                'percent':
+                    tds[6].get_text().rstrip('%'),
                 #unknown
-                'status/comment':           tds[7].get_text(),
+                'status/comment':
+                    tds[7].get_text(),
                 #date grading completed
-                'date completed':           getDate(tds[8].get_text()),
+                'date completed':
+                    getDate(tds[8].get_text()),
                 #consider combining with due time
-                'due date':                 getDate(tds[9].get_text()),
-                'grading complete':         tds[10].get_text(),
-                'attachments':              getAttachments(tds[11])
+                'due date':
+                    getDate(tds[9].get_text()),
+                'grading complete':
+                    tds[10].get_text(),
+                'attachments':
+                    getAttachments(tds[11])
             }
     return entry
 
@@ -110,7 +128,8 @@ def getDate(date_str):
     return dateutil.parser.parse(date_str).isoformat()
 
 def getAttachments(td):
-    link_id = {'id': re.compile('ctl(\d\d)_MainContent_subGBS_DataDetails_ctl(\d\d)_dlDocuments_ctl(\d\d)_lnkDoc')}
+    link_id = {'id': re.compile(("ctl(\d\d)_MainContent_subGBS_DataDetails"
+                                 "_ctl(\d\d)_dlDocuments_ctl(\d\d)_lnkDoc"))}
     links = td.find_all('a', link_id)
     attachments = []
     for link in links:
@@ -122,7 +141,8 @@ def getAttachments(td):
     return attachments
 
 def getWeighting(soup):
-    table = getTable(soup, 'td', 'ctl(\d\d)_MainContent_subGBS_DataSummary_ctl(\d\d).*')
+    table = getTable(soup, 'td', ("ctl(\d\d)_MainContent_subGBS"
+                                  "_DataSummary_ctl(\d\d).*"))
     rows = table.find_all('tr')
     categories = []
     for row in rows:
@@ -155,7 +175,8 @@ def getCategory(row):
                     'recieved points':  re.compile('.*tdPTS'),
                     #max points (out of points)
                     'max points':       re.compile('.*tdMX'),
-                    #my percentage (can also be calculated with recieved points and max points)
+                    #my percentage (can also be calculated with
+                    #   recieved points and max points)
                     'grade percent':    re.compile('.*tdPCT'),
                     #letter grade
                     'mark':             re.compile('.*tdMK')
