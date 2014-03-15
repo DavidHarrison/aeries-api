@@ -92,8 +92,8 @@ def getEntry(row):
     return entry
 
 def clean(string):
-    cleaned = string.strip(' \t\n\r')
-    cleaned = cleaned.encode('ascii', 'ignore')
+    cleaned = string.strip()
+    cleaned = cleaned.strip(' \t\n\r')
     return cleaned
 
 def getExpand(key, super_td):
