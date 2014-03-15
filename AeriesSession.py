@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python3.3
 
 #Selenium allows for scripting a full web browser
 #   (including graphical ones such as Chrome and Firefox)

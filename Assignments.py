@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python3.3
 
 #BeautifulSoup provides a model for the HTML recieved from the Session
 from bs4 import BeautifulSoup

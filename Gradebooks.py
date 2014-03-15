@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python3.3
 
 #re allows for matching text with regular expressions
 #   (including through BeautifulSoup)

@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python3.3
 
 from bs4 import BeautifulSoup
 import re, dateutil.parser, time
