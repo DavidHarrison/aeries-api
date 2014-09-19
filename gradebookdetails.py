@@ -7,7 +7,7 @@ BASE_URL = 'https://abi.ausdk12.org/aeriesportal/'
 DEFAULT_PAGE = 'default.aspx'
 GRADEBOOK_PAGE = 'GradebookDetails.aspx'
 
-def getGradebook(gradebook_name_re, session):
+def getGradebookDetails(gradebook_name_re, session):
     page = getGradebookPage(gradebook_name_re, session)
     soup = BeautifulSoup(page)
     entries = getEntries(soup)

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.3
+#!/usr/bin/env python3
 
 #Selenium allows for scripting a full web browser
 #   (including graphical ones such as Chrome and Firefox)
@@ -8,7 +8,12 @@
 from selenium import webdriver
 #Ability to select values in HTML <select> tags
 from selenium.webdriver.support import select
-import time
+#JSON for language agnostic output (could use simplejson)
+import json
+from api.gradebooks import getGradebooks
+from api.assignments import getAssignments
+from api.gradebookdetails import getGradebookDetails
+from logging import getLogger
 
 #Base URL of the AUSDK12 Aeries system
 BASE_URL=       'https://abi.ausdk12.org/aeriesportal/'
@@ -23,11 +28,15 @@ PASSWORD_ID =   'portalAccountPassword'
 #id for login button
 LOGIN_ID =      'LoginButton'
 
-class Session:
+logger = getLogger('debugger')
+
+class AeriesSession:
 
     #Maintain an instance of a browser, preserving the
     #   page accross calls
     global driver
+    global username
+    #global password
 
     #Initialize the Session and login in to the Aeries website
     #   if successful, the browser will be on the home page
@@ -35,6 +44,9 @@ class Session:
     def __init__(self, email, password):
         #print "Email: " + str(email)
         #print "Password: " + str(password)
+        logger.debug("initing AeriesSession")
+        self.username = email
+        #self.password = password
         login_url = BASE_URL + LOGIN_PAGE
         self.driver = webdriver.PhantomJS(service_log_path='/dev/null')
         self.driver.get(login_url)
@@ -46,6 +58,10 @@ class Session:
         login_elem.click()
         if self.driver.current_url == login_url:
             raise ValueError('failed to login')
+        logger.debug("inited AeriesSession")
+
+    def __repr__(self):
+        return "<AeriesSession for " + self.username + ">"
 
     #Execute Javascript on the current page
     def executeJS(self, js):
@@ -68,3 +84,20 @@ class Session:
 
     def getCurrentURL(self):
         return self.driver.current_url
+
+    def get(self, what, gradebook=None, json=False):
+        logger.debug("getting: " + str(what))
+        if what == 'grades':
+            data = getGradebooks(self)
+        if what == 'assignments':
+            data = getAssignments(self)
+        if what == 'gradebook':
+            #gradebook is treated as a regular expression
+            data = getGradebookDetails(gradebook, self)
+        if json:
+            data = toJSON(data)
+        return data
+    
+    def toJSON(self, python_hierachy):
+        return json.dumps(python_hierachy, sort_keys=True, indent=4,
+            separators=(',', ': '), ensure_ascii=False)
